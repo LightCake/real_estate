@@ -1,0 +1,32 @@
+.property_card {
+  border: 1px solid #e8e9ea;
+  border-radius: 0.3rem;
+  overflow: hidden;
+}
+
+.property_card > *:not(:first-child) {
+  margin: 1rem;
+}
+
+.property_card_img {
+  width: 100%;
+}
+
+.property_card_price {
+  font-size: 1.2rem;
+}
+
+.property_card_details {
+  display: grid;
+  grid-auto-flow: column;
+}
+
+.property_card_detail {
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+
+.property_card_address {
+  display: grid;
+  grid-gap: 0.2rem;
+}

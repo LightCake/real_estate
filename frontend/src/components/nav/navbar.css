@@ -1,0 +1,30 @@
+.navbar {
+  background: black;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  height: var(--navbar_height);
+}
+
+.navbar-logo {
+  width: 4rem;
+}
+
+.navbar-links-container {
+  display: flex;
+}
+
+.navbar-link {
+  margin-right: 1rem;
+  color: #5c605a;
+  text-decoration: none;
+}
+
+.navbar-link-selected {
+  color: white;
+}
+
+.navbar a {
+  outline: none;
+}

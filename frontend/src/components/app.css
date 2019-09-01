@@ -1,0 +1,28 @@
+:root {
+  --navbar_height: 4rem;
+  --grey: #cccccc;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.app {
+  font-family: "Fira Sans", sans-serif;
+}
+
+/* Universal CSS */
+.select_width {
+  width: 9rem;
+}
+
+.button {
+  font-size: 1rem;
+  padding: 0.5rem 0.8rem;
+  border: none;
+  background: black;
+  color: white;
+  cursor: pointer;
+}

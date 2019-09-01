@@ -1,0 +1,65 @@
+.sell {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  min-height: calc(100vh - var(--navbar_height));
+}
+
+.sell_title {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.sell_form_container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.sell_image {
+  background-image: url("../../assets/adi-constantin-C8Z5DvtWQMw-unsplash.jpg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  height: 100%;
+}
+
+.sell_form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 1rem;
+}
+
+.sell_form_type {
+  grid-column: 1/2;
+  grid-row: 1/2;
+  width: 100%;
+}
+
+.sell_form_price {
+  grid-column: 1/2;
+}
+
+.sell_form_textarea {
+  grid-column: 1/3;
+  height: 4rem;
+  font-size: 1rem;
+  padding: 0.5rem 0.8rem;
+  border-radius: 0.3rem;
+  border: 1px solid var(--grey);
+  resize: none;
+  font-family: "Fira Sans", sans-serif;
+}
+
+.sell_form_built {
+  grid-column: 2/3;
+  grid-row: 1/2;
+}
+
+.sell_form_photos {
+  justify-self: start;
+}
+
+.sell_form_submit {
+  justify-self: end;
+}

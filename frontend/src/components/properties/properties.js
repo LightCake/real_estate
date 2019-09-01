@@ -26,28 +26,34 @@ class Properties extends React.Component {
   componentDidMount() {
     const criteria = ["price", "size"];
     for (let criterion of criteria) {
-      axios
-        .get(`/api/properties/minmax/${criterion}`)
-        .then(res => {
-          const obj = res.data;
-          const arr = [obj.min, obj.max];
-          this.setState({
+      axios.get(`/api/properties/minmax/${criterion}`).then(res => {
+        const obj = res.data;
+        const arr = [obj.min, obj.max];
+        this.setState(
+          {
             [criterion + "_range"]: arr,
             [criterion]: arr
-          });
-        })
-        .then(res => this.setState({ loading: false }));
+          },
+          () => {
+            if (this.state.price.length > 0 && this.state.size.length > 0) {
+              this.setState({
+                loading: false
+              });
+            }
+          }
+        );
+      });
     }
   }
 
   onPageChanged = data => {
-    console.log("On page changed...");
+    console.log("On page changed...", data);
     const { currentPage, totalPages, pageLimit, price, size } = data;
     axios
       .get(
         `/api/properties/filter/${currentPage}/${pageLimit}/${price[0]}/${
           price[1]
-        }`
+        }/${size[0]}/${size[1]}`
       )
       .then(res => {
         // TODO

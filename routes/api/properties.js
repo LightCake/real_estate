@@ -166,25 +166,29 @@ router.post(
 );
 
 // Get properties with offset and limit
-router.get("/filter/:page/:limit/:minprice/:maxprice", (request, response) => {
-  console.log("Route: ", request.params.minprice, request.params.maxprice);
-  const offset = (request.params.page - 1) * request.params.limit;
-  db.query(
-    "SELECT * FROM properties WHERE price >= $1 AND price <= $2 LIMIT $3 OFFSET $4",
-    [
-      request.params.minprice,
-      request.params.maxprice,
-      request.params.limit,
-      offset
-    ],
-    (err, res) => {
-      if (err) throw err;
+router.get(
+  "/filter/:page/:limit/:minprice/:maxprice/:minsize/:maxsize",
+  (request, response) => {
+    const offset = (request.params.page - 1) * request.params.limit;
+    db.query(
+      "SELECT * FROM properties WHERE price >= $1 AND price <= $2 AND size >= $3 AND size <= $4 LIMIT $5 OFFSET $6",
+      [
+        request.params.minprice,
+        request.params.maxprice,
+        request.params.minsize,
+        request.params.maxsize,
+        request.params.limit,
+        offset
+      ],
+      (err, res) => {
+        if (err) throw err;
 
-      if (res) {
-        response.send(res.rows);
+        if (res) {
+          response.send(res.rows);
+        }
       }
-    }
-  );
-});
+    );
+  }
+);
 
 module.exports = router;

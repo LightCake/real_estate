@@ -4,7 +4,16 @@ import Img from "../../assets/scott-webb-1ddol8rgUH8-unsplash.jpg";
 
 class PropertyCard extends React.Component {
   render() {
-    const { price, beds, baths, size, street, postal_code, place } = this.props;
+    const {
+      price,
+      beds,
+      baths,
+      size,
+      street,
+      postal_code,
+      state,
+      country
+    } = this.props;
 
     return (
       <div className="property_card">
@@ -22,7 +31,9 @@ class PropertyCard extends React.Component {
         <div className="property_card_address">
           <span className="property_card_street">{street}</span>
           <span className="property_card_postal-code">{postal_code}</span>
-          <span className="property_card_place">{place}</span>
+          <span className="property_card_place">
+            {state}, {country}
+          </span>
         </div>
       </div>
     );

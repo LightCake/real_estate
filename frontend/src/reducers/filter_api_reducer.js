@@ -22,14 +22,15 @@ const initialState = {
 export default function(state = initialState, action) {
   switch (action.type) {
     case RECEIVE_DEFAULT_VALUES: {
+      const def = [{ value: "", label: "All" }];
       const { price, size, type, bathrooms, bedrooms } = action.data;
       return {
         ...state,
         price,
         size,
-        type,
-        bathrooms,
-        bedrooms,
+        type: def.concat(type),
+        bathrooms: def.concat(bathrooms),
+        bedrooms: def.concat(bedrooms),
         selectedPrice: price,
         selectedSize: size,
         loading: false

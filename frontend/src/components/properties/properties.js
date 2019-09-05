@@ -91,36 +91,45 @@ class Properties extends React.Component {
                 options={this.props.filter.type}
               />
             </div>
-            <Select
-              name="Country"
-              className="select_width"
-              placeholder="Country"
-              value={this.props.filter.selectedCountry}
-              onChange={this.update("selectedCountry")}
-              options={[
-                { value: "australia", label: "Australia" },
-                { value: "germany", label: "Germany" },
-                { value: "southkorea", label: "South Korea" },
-                { value: "switzerland", label: "Switzerland" },
-                { value: "usa", label: "United States of America" }
-              ]}
-            />
-            <Select
-              name="Bathrooms"
-              className="select_width"
-              placeholder="Bathrooms"
-              value={this.props.filter.selectedBathrooms}
-              onChange={this.update("selectedBathrooms")}
-              options={this.props.filter.bathrooms}
-            />
-            <Select
-              name="Bedrooms"
-              className="select_width"
-              placeholder="Bedrooms"
-              value={this.props.filter.selectedBedrooms}
-              onChange={this.update("selectedBedrooms")}
-              options={this.props.filter.bedrooms}
-            />
+            <div className="select-container">
+              <span className="select-header">Country</span>
+              <Select
+                name="Country"
+                className="select_width"
+                placeholder="Country"
+                value={this.props.filter.selectedCountry}
+                onChange={this.update("selectedCountry")}
+                options={[
+                  { value: "australia", label: "Australia" },
+                  { value: "germany", label: "Germany" },
+                  { value: "southkorea", label: "South Korea" },
+                  { value: "switzerland", label: "Switzerland" },
+                  { value: "usa", label: "United States of America" }
+                ]}
+              />
+            </div>
+            <div className="select-container">
+              <span className="select-header">Bathrooms</span>
+              <Select
+                name="Bathrooms"
+                className="select_width"
+                placeholder="Bathrooms"
+                value={this.props.filter.selectedBathrooms}
+                onChange={this.update("selectedBathrooms")}
+                options={this.props.filter.bathrooms}
+              />
+            </div>
+            <div className="select-container">
+              <span className="select-header">Bedrooms</span>
+              <Select
+                name="Bedrooms"
+                className="select_width"
+                placeholder="Bedrooms"
+                value={this.props.filter.selectedBedrooms}
+                onChange={this.update("selectedBedrooms")}
+                options={this.props.filter.bedrooms}
+              />
+            </div>
           </div>
         </div>
         <div className="properties-right">
@@ -130,6 +139,10 @@ class Properties extends React.Component {
               beds={property.bedrooms}
               baths={property.bathrooms}
               size={property.size}
+              street={property.street}
+              postal_code={property.postal_code}
+              state={property.state}
+              country={property.country}
             />
           ))}
           <Pagination

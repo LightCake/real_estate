@@ -32,7 +32,6 @@ CREATE TABLE property_images (
 );
 
 CREATE TABLE property_addresses (
-  id SERIAL PRIMARY KEY,
   property_id INT,
   street VARCHAR(100),
   city VARCHAR(100),

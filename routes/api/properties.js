@@ -212,7 +212,7 @@ router.post("/filter", (request, response) => {
   console.log(request.body);
   const offset = (currentPage - 1) * pageLimit;
   db.query(
-    "SELECT * FROM properties WHERE price >= $1 AND price <= $2 AND size >= $3 AND size <= $4 AND ($5 = '' or type = $5) AND ($6 = '' or bedrooms = $6::integer) AND ($7 = '' or bathrooms = $7::integer) LIMIT $8 OFFSET $9",
+    "SELECT properties.id, * FROM properties LEFT OUTER JOIN property_addresses ON (properties.id = property_addresses.property_id) WHERE price >= $1 AND price <= $2 AND size >= $3 AND size <= $4 AND ($5 = '' or type = $5) AND ($6 = '' or bedrooms = $6::integer) AND ($7 = '' or bathrooms = $7::integer) LIMIT $8 OFFSET $9",
     [
       selectedPrice[0],
       selectedPrice[1],

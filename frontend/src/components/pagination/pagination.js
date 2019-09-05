@@ -57,8 +57,8 @@ class Pagination extends React.Component {
       totalPages: this.totalPages,
       pageLimit: this.pageLimit,
       totalRecords: this.totalRecords,
-      size: this.props.size,
-      price: this.props.price,
+      selectedSize: this.props.selectedSize,
+      selectedPrice: this.props.selectedPrice,
       selectedType: this.props.selectedType,
       selectedBedrooms: this.props.selectedBedrooms,
       selectedBathrooms: this.props.selectedBathrooms

@@ -203,8 +203,8 @@ router.post("/filter", (request, response) => {
   const {
     currentPage,
     pageLimit,
-    size,
-    price,
+    selectedSize,
+    selectedPrice,
     selectedType,
     selectedBedrooms,
     selectedBathrooms
@@ -214,10 +214,10 @@ router.post("/filter", (request, response) => {
   db.query(
     "SELECT * FROM properties WHERE price >= $1 AND price <= $2 AND size >= $3 AND size <= $4 AND ($5 = '' or type = $5) AND ($6 = '' or bedrooms = $6::integer) AND ($7 = '' or bathrooms = $7::integer) LIMIT $8 OFFSET $9",
     [
-      price[0],
-      price[1],
-      size[0],
-      size[1],
+      selectedPrice[0],
+      selectedPrice[1],
+      selectedSize[0],
+      selectedSize[1],
       selectedType.value,
       selectedBedrooms.value,
       selectedBathrooms.value,

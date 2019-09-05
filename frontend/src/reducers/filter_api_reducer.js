@@ -1,6 +1,7 @@
 import {
   RECEIVE_DEFAULT_VALUES,
-  TOGGLE_LOADING
+  TOGGLE_LOADING,
+  RECEIVE_UPDATED_FIELD
 } from "../actions/filter_actions";
 
 const initialState = {
@@ -38,6 +39,11 @@ export default function(state = initialState, action) {
       return {
         ...state,
         loading: !state.loading
+      };
+    case RECEIVE_UPDATED_FIELD:
+      return {
+        ...state,
+        [action.field]: action.update
       };
     default:
       return state;

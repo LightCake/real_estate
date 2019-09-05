@@ -19,19 +19,39 @@ class Properties extends React.Component {
     this.props.toggleLoading();
   }
 
-  onPageChanged = async data => {
+  onPageChanged = data => {
     const { currentPage, totalPages } = data;
-    await this.props.receiveCurrentAndTotalPage({ currentPage, totalPages });
-    await this.props.fetchFilteredProperties(data);
-    console.log("On Page Changed");
-    console.log(this.props.filter.loading);
+    this.props.receiveCurrentAndTotalPage({ currentPage, totalPages });
+    this.props.fetchFilteredProperties(data);
   };
 
   update = field => async data => {
-    await this.setState({
-      [field]: data
-    });
-    this.onPageChanged(this.state);
+    await this.props.update(field)(data);
+    const {
+      currentPage,
+      totalPages,
+      pageLimit,
+      totalRecords
+    } = this.props.pagination;
+    const {
+      selectedSize,
+      selectedPrice,
+      selectedType,
+      selectedBedrooms,
+      selectedBathrooms
+    } = this.props.filter;
+    const paginationData = {
+      currentPage,
+      totalPages,
+      pageLimit,
+      totalRecords,
+      selectedSize,
+      selectedPrice,
+      selectedType,
+      selectedBedrooms,
+      selectedBathrooms
+    };
+    this.onPageChanged(paginationData);
   };
 
   render() {
@@ -47,7 +67,7 @@ class Properties extends React.Component {
               range={this.props.filter.price}
               step={1000}
               ticks={5}
-              onChange={this.update("price")}
+              onChange={this.update("selectedPrice")}
             />
           </div>
           <div className="properties-slider">
@@ -56,7 +76,7 @@ class Properties extends React.Component {
               range={this.props.filter.size}
               step={1}
               ticks={5}
-              onChange={this.update("size")}
+              onChange={this.update("selectedSize")}
             />
           </div>
           <div className="properties-select">
@@ -117,8 +137,8 @@ class Properties extends React.Component {
             pageLimit={this.props.pagination.pageLimit}
             pageNeighbours={this.props.pagination.pageNeighbours}
             onPageChanged={this.onPageChanged}
-            size={this.props.filter.selectedSize}
-            price={this.props.filter.selectedPrice}
+            selectedSize={this.props.filter.selectedSize}
+            selectedPrice={this.props.filter.selectedPrice}
             selectedType={this.props.filter.selectedType}
             selectedBedrooms={this.props.filter.selectedBedrooms}
             selectedBathrooms={this.props.filter.selectedBathrooms}

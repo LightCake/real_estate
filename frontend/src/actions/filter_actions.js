@@ -4,6 +4,7 @@ export const RECEIVE_TOTAL_RECORDS = "RECEIVE_TOTAL_RECORDS";
 export const RECEIVE_CURRENT_AND_TOTAL_PAGE = "RECEIVE_CURRENT_TOTAL_PAGE";
 export const RECEIVE_DEFAULT_VALUES = "RECEIVE_DEFAULT_VALUES";
 export const TOGGLE_LOADING = "TOGGLE_LOADING";
+export const RECEIVE_UPDATED_FIELD = "RECEIVE_UPDATED_FIELD";
 
 export const receiveDefaultValues = data => ({
   type: RECEIVE_DEFAULT_VALUES,
@@ -20,6 +21,19 @@ export const receiveCurrentAndTotalPage = pages => ({
   pages
 });
 
+export const receiveUpdatedField = (field, update) => ({
+  type: RECEIVE_UPDATED_FIELD,
+  update,
+  field
+});
+
+/*
+ * Fetches
+ * - total number of properties
+ * - default filter values for
+ *   - price/size slider
+ *   - type/bedrooms/bathrooms select boxed
+ */
 export const fetchValues = criteria => dispatch => {
   APIUtil.getPropertyCount()
     .then(res => dispatch(receiveTotalRecords(res.data)))
@@ -55,3 +69,7 @@ export const fetchValues = criteria => dispatch => {
 export const toggleLoading = () => ({
   type: TOGGLE_LOADING
 });
+
+export const update = field => update => dispatch => {
+  dispatch(receiveUpdatedField(field, update));
+};

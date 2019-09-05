@@ -3,7 +3,8 @@ import { fetchFilteredProperties } from "../../actions/property_actions";
 import {
   fetchValues,
   toggleLoading,
-  receiveCurrentAndTotalPage
+  receiveCurrentAndTotalPage,
+  update
 } from "../../actions/filter_actions";
 import Properties from "./properties";
 
@@ -22,7 +23,8 @@ const mapDispatchToProps = dispatch => {
     fetchValues: criteria => dispatch(fetchValues(criteria)),
     receiveCurrentAndTotalPage: pages =>
       dispatch(receiveCurrentAndTotalPage(pages)),
-    toggleLoading: () => dispatch(toggleLoading())
+    toggleLoading: () => dispatch(toggleLoading()),
+    update: field => data => dispatch(update(field)(data))
   };
 };
 

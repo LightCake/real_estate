@@ -1,72 +1,30 @@
 import React from "react";
-import axios from "axios";
 import Select from "react-select";
 import "./properties.css";
 import Pagination from "../pagination/pagination";
 import PropertyCard from "../property_card/property_card";
 import RangeSlider from "../range_slider/RangeSlider";
+import Spinner from "../spinner/spinner";
 
 class Properties extends React.Component {
-  state = {
-    currentProperties: [],
-    currentPage: null,
-    totalPages: null,
-    price: [],
-    size: [],
-    selectedType: "",
-    selectedCountry: "",
-    selectedBathrooms: "",
-    selectedBedrooms: "",
-    price_range: [],
-    size_range: [],
-    pageLimit: 6,
-    loading: true
-  };
-
   componentDidMount() {
-    const criteria = ["price", "size"];
-    for (let criterion of criteria) {
-      axios.get(`/api/properties/minmax/${criterion}`).then(res => {
-        const obj = res.data;
-        const arr = [obj.min, obj.max];
-        this.setState(
-          {
-            [criterion + "_range"]: arr,
-            [criterion]: arr
-          },
-          () => {
-            if (this.state.price.length > 0 && this.state.size.length > 0) {
-              this.setState({
-                loading: false
-              });
-            }
-          }
-        );
-      });
-    }
+    const criteria = {
+      min_max: ["price", "size"],
+      distinct: ["type", "bedrooms", "bathrooms"]
+    };
+    this.props.fetchValues(criteria);
   }
 
-  onPageChanged = data => {
-    console.log("On page changed...", data);
-    const { currentPage, totalPages, pageLimit, price, size } = data;
-    axios
-      .get(
-        `/api/properties/filter/${currentPage}/${pageLimit}/${price[0]}/${
-          price[1]
-        }/${size[0]}/${size[1]}`
-      )
-      .then(res => {
-        // TODO
-        const currentProperties = res.data;
-        console.log(currentProperties);
-        console.log(this.state);
-        this.setState({
-          currentPage,
-          currentProperties,
-          totalPages,
-          loading: false
-        });
-      });
+  componentWillUnmount() {
+    this.props.toggleLoading();
+  }
+
+  onPageChanged = async data => {
+    const { currentPage, totalPages } = data;
+    await this.props.receiveCurrentAndTotalPage({ currentPage, totalPages });
+    await this.props.fetchFilteredProperties(data);
+    console.log("On Page Changed");
+    console.log(this.props.filter.loading);
   };
 
   update = field => async data => {
@@ -74,12 +32,11 @@ class Properties extends React.Component {
       [field]: data
     });
     this.onPageChanged(this.state);
-    console.log("Updating...");
   };
 
   render() {
-    if (this.state.loading) {
-      return <span>Loading</span>;
+    if (this.props.filter.loading) {
+      return <Spinner />;
     }
     return (
       <div className="properties">
@@ -87,8 +44,8 @@ class Properties extends React.Component {
           <div className="properties-slider">
             <span className="properties-header">Price</span>
             <RangeSlider
-              range={this.state.price_range}
-              step={1}
+              range={this.props.filter.price}
+              step={1000}
               ticks={5}
               onChange={this.update("price")}
             />
@@ -96,29 +53,29 @@ class Properties extends React.Component {
           <div className="properties-slider">
             <span className="properties-header">Size</span>
             <RangeSlider
-              range={this.state.size_range}
+              range={this.props.filter.size}
               step={1}
               ticks={5}
               onChange={this.update("size")}
             />
           </div>
           <div className="properties-select">
-            <Select
-              name="Type"
-              className="select_width"
-              placeholder="Type"
-              value={this.state.selectedType}
-              onChange={this.update("selectedType")}
-              options={[
-                { value: "apartment", label: "Apartment" },
-                { value: "house", label: "House" }
-              ]}
-            />
+            <div className="select-container">
+              <span className="select-header">Type</span>
+              <Select
+                name="Type"
+                className="select_width"
+                placeholder="Type"
+                value={this.props.filter.selectedType}
+                onChange={this.update("selectedType")}
+                options={this.props.filter.type}
+              />
+            </div>
             <Select
               name="Country"
               className="select_width"
               placeholder="Country"
-              value={this.state.selectedCountry}
+              value={this.props.filter.selectedCountry}
               onChange={this.update("selectedCountry")}
               options={[
                 { value: "australia", label: "Australia" },
@@ -132,32 +89,22 @@ class Properties extends React.Component {
               name="Bathrooms"
               className="select_width"
               placeholder="Bathrooms"
-              value={this.state.selectedBathrooms}
+              value={this.props.filter.selectedBathrooms}
               onChange={this.update("selectedBathrooms")}
-              options={[
-                { value: "1", label: "1" },
-                { value: "2", label: "2" },
-                { value: "3", label: "3" },
-                { value: "4", label: "4" }
-              ]}
+              options={this.props.filter.bathrooms}
             />
             <Select
               name="Bedrooms"
               className="select_width"
               placeholder="Bedrooms"
-              value={this.state.selectedBedrooms}
+              value={this.props.filter.selectedBedrooms}
               onChange={this.update("selectedBedrooms")}
-              options={[
-                { value: "1", label: "1" },
-                { value: "2", label: "2" },
-                { value: "3", label: "3" },
-                { value: "4", label: "4" }
-              ]}
+              options={this.props.filter.bedrooms}
             />
           </div>
         </div>
         <div className="properties-right">
-          {this.state.currentProperties.map(property => (
+          {this.props.properties.map(property => (
             <PropertyCard
               price={property.price}
               beds={property.bedrooms}
@@ -166,12 +113,15 @@ class Properties extends React.Component {
             />
           ))}
           <Pagination
-            totalRecords={5}
-            pageLimit={6}
-            pageNeighbours={1}
+            totalRecords={this.props.pagination.totalRecords}
+            pageLimit={this.props.pagination.pageLimit}
+            pageNeighbours={this.props.pagination.pageNeighbours}
             onPageChanged={this.onPageChanged}
-            size={this.state.size}
-            price={this.state.price}
+            size={this.props.filter.selectedSize}
+            price={this.props.filter.selectedPrice}
+            selectedType={this.props.filter.selectedType}
+            selectedBedrooms={this.props.filter.selectedBedrooms}
+            selectedBathrooms={this.props.filter.selectedBathrooms}
           />
         </div>
       </div>

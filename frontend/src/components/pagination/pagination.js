@@ -58,7 +58,10 @@ class Pagination extends React.Component {
       pageLimit: this.pageLimit,
       totalRecords: this.totalRecords,
       size: this.props.size,
-      price: this.props.price
+      price: this.props.price,
+      selectedType: this.props.selectedType,
+      selectedBedrooms: this.props.selectedBedrooms,
+      selectedBathrooms: this.props.selectedBathrooms
     };
 
     this.setState({ currentPage }, () => onPageChanged(paginationData));

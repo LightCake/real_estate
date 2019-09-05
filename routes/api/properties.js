@@ -18,6 +18,17 @@ router.get("/", (request, response) => {
   });
 });
 
+// Get number of properties
+router.get("/count", (request, response) => {
+  db.query("SELECT COUNT(*) FROM properties", (err, res) => {
+    if (err) throw err;
+
+    if (res) {
+      response.send(res.rows[0]);
+    }
+  });
+});
+
 // Get all properties listed by an user
 router.get("/user/:user_id", (request, response) => {
   db.query(
@@ -37,19 +48,41 @@ router.get("/user/:user_id", (request, response) => {
   );
 });
 
-// Get min and max values of one column
-router.get("/minmax/:column", (request, response) => {
-  db.query(
-    `SELECT min(${request.params.column}), max(${request.params.column}) from properties`,
-    (err, res) => {
-      if (err) throw err;
+// Fetch default values of the filter
+router.post("/set_filter", (request, response) => {
+  const min_max = request.body.min_max;
+  console.log(request.body);
+  let query = "SELECT";
+  for (let i = 0; i < min_max.length; i++) {
+    query += ` min(${min_max[i]}) as ${"min_" + min_max[i]}, max(${
+      min_max[i]
+    }) as ${"max_" + min_max[i]}${i !== min_max.length - 1 ? "," : ""}`;
+  }
+  query += " from properties";
+  console.log("Query: ", query);
+  db.query(query, (err, res) => {
+    if (err) throw err;
 
-      if (res) {
-        data = res.rows[0];
-        response.send(data);
+    if (res) {
+      const data = {};
+      data.min_max = res.rows[0];
+
+      const distinct = request.body.distinct;
+      let query = "SELECT DISTINCT";
+      for (let i = 0; i < distinct.length; i++) {
+        query += ` ${distinct[i]}${i !== distinct.length - 1 ? "," : ""}`;
       }
+      query += " from properties";
+      db.query(query, (err, res) => {
+        if (err) throw err;
+
+        if (res) {
+          data.distinct = res.rows;
+          response.send(data);
+        }
+      });
     }
-  );
+  });
 });
 
 // Get unique values of one column
@@ -165,30 +198,40 @@ router.post(
   }
 );
 
-// Get properties with offset and limit
-router.get(
-  "/filter/:page/:limit/:minprice/:maxprice/:minsize/:maxsize",
-  (request, response) => {
-    const offset = (request.params.page - 1) * request.params.limit;
-    db.query(
-      "SELECT * FROM properties WHERE price >= $1 AND price <= $2 AND size >= $3 AND size <= $4 LIMIT $5 OFFSET $6",
-      [
-        request.params.minprice,
-        request.params.maxprice,
-        request.params.minsize,
-        request.params.maxsize,
-        request.params.limit,
-        offset
-      ],
-      (err, res) => {
-        if (err) throw err;
+// Get filtered properties
+router.post("/filter", (request, response) => {
+  const {
+    currentPage,
+    pageLimit,
+    size,
+    price,
+    selectedType,
+    selectedBedrooms,
+    selectedBathrooms
+  } = request.body;
+  console.log(request.body);
+  const offset = (currentPage - 1) * pageLimit;
+  db.query(
+    "SELECT * FROM properties WHERE price >= $1 AND price <= $2 AND size >= $3 AND size <= $4 AND ($5 = '' or type = $5) AND ($6 = '' or bedrooms = $6::integer) AND ($7 = '' or bathrooms = $7::integer) LIMIT $8 OFFSET $9",
+    [
+      price[0],
+      price[1],
+      size[0],
+      size[1],
+      selectedType.value,
+      selectedBedrooms.value,
+      selectedBathrooms.value,
+      pageLimit,
+      offset
+    ],
+    (err, res) => {
+      if (err) throw err;
 
-        if (res) {
-          response.send(res.rows);
-        }
+      if (res) {
+        response.send(res.rows);
       }
-    );
-  }
-);
+    }
+  );
+});
 
 module.exports = router;

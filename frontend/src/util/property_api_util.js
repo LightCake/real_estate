@@ -11,3 +11,7 @@ export const addImages = propertyImages => {
 export const addAddress = propertyAddress => {
   return axios.post("/api/properties/add-address", propertyAddress);
 };
+
+export const fetchFilteredProperties = filter => {
+  return axios.post("/api/properties/filter", filter);
+};

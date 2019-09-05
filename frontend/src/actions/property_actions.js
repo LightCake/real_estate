@@ -1,6 +1,12 @@
 import * as APIUtil from "../util/property_api_util";
 
+export const RECEIVE_FILTERED_PROPERTIES = "RECEIVE_FILTERED_PROPERTIES";
 export const RECEIVE_PROPERTY_ERRORS = "RECEIVE_PROPERTY_ERRORS";
+
+export const receiveFilteredProperties = properties => ({
+  type: RECEIVE_FILTERED_PROPERTIES,
+  properties
+});
 
 export const receiveErrors = errors => ({
   type: RECEIVE_PROPERTY_ERRORS,
@@ -32,4 +38,13 @@ export const list = property => dispatch => {
       });
     })
     .catch(err => dispatch(receiveErrors(err.response.data)));
+};
+
+export const fetchFilteredProperties = filter => dispatch => {
+  APIUtil.fetchFilteredProperties(filter)
+    .then(res => {
+      const currentProperties = res.data;
+      dispatch(receiveFilteredProperties(currentProperties));
+    })
+    .catch(err => dispatch(receiveErrors(err)));
 };

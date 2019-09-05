@@ -18,7 +18,7 @@ class NavBar extends React.Component {
             className="navbar-link"
             activeClassName="navbar-link-selected"
           >
-            Sell
+            List New Property
           </NavLink>
           <NavLink
             to={"/saved"}

@@ -104,7 +104,7 @@ router.get("/unique/:column", (request, response) => {
 });
 
 // Get property by ID
-router.get("/:id", (request, response) => {
+router.get("/specific/:id", (request, response) => {
   db.query(
     "SELECT * FROM properties WHERE id=$1",
     [request.params.id],
@@ -120,11 +120,11 @@ router.get("/:id", (request, response) => {
   );
 });
 
-// Get the newest n properties
-router.get("/newest/:n", (request, response) => {
+// Get the n newest properties by type
+router.get("/newest/:n/:type", (request, response) => {
   db.query(
-    "SELECT * FROM properties ORDER BY created desc limit $1",
-    [request.params.n],
+    "SELECT * FROM properties LEFT OUTER JOIN property_addresses ON (properties.id = property_addresses.property_id) WHERE type = $1 ORDER BY created desc limit $2",
+    [request.params.type, request.params.n],
     (err, res) => {
       if (err) throw err;
 
@@ -224,6 +224,20 @@ router.post("/filter", (request, response) => {
       pageLimit,
       offset
     ],
+    (err, res) => {
+      if (err) throw err;
+
+      if (res) {
+        response.send(res.rows);
+      }
+    }
+  );
+});
+
+// Request number of users, listed properties, sold properties, countries
+router.get("/general", (request, response) => {
+  db.query(
+    "SELECT COUNT(*) FROM users union all SELECT COUNT(*) FROM properties WHERE sold = false union all SELECT COUNT(*) FROM properties WHERE sold = true union all SELECT COUNT(DISTINCT country) FROM property_addresses",
     (err, res) => {
       if (err) throw err;
 

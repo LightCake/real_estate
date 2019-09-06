@@ -2,6 +2,8 @@ import * as APIUtil from "../util/property_api_util";
 
 export const RECEIVE_FILTERED_PROPERTIES = "RECEIVE_FILTERED_PROPERTIES";
 export const RECEIVE_PROPERTY_ERRORS = "RECEIVE_PROPERTY_ERRORS";
+export const RECEIVE_GENERAL_DATA = "RECEIVE_GENERAL_DATA";
+export const RECEIVE_NEWEST_PROPERTIES = "RECEIVE_NEWEST_PROPERTIES";
 
 export const receiveFilteredProperties = properties => ({
   type: RECEIVE_FILTERED_PROPERTIES,
@@ -11,6 +13,16 @@ export const receiveFilteredProperties = properties => ({
 export const receiveErrors = errors => ({
   type: RECEIVE_PROPERTY_ERRORS,
   errors
+});
+
+export const receiveGeneralData = data => ({
+  type: RECEIVE_GENERAL_DATA,
+  data
+});
+
+export const receiveNewestProperties = properties => ({
+  type: RECEIVE_NEWEST_PROPERTIES,
+  properties
 });
 
 export const list = property => dispatch => {
@@ -47,4 +59,22 @@ export const fetchFilteredProperties = filter => dispatch => {
       dispatch(receiveFilteredProperties(currentProperties));
     })
     .catch(err => dispatch(receiveErrors(err)));
+};
+
+export const fetchGeneralData = () => dispatch => {
+  APIUtil.fetchGeneral().then(res => {
+    const { data } = res;
+    const temp = ["users", "listed", "sold", "countries"];
+    const general_data = {};
+    data.forEach((obj, index) => {
+      general_data[temp[index]] = obj.count;
+    });
+    dispatch(receiveGeneralData(general_data));
+  });
+};
+
+export const fetchNewestProperites = type => dispatch => {
+  APIUtil.fetchNewestProperties(type).then(res =>
+    dispatch(receiveNewestProperties(res.data))
+  );
 };

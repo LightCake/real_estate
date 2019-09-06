@@ -11,7 +11,12 @@ class SquareFact extends React.Component {
   componentDidMount() {
     const handleIntersect = ([entry]) => {
       if (entry.isIntersecting) {
-        this.animateValue(this.numRef.current, 0, 100, 2000);
+        this.animateValue(
+          this.numRef.current,
+          0,
+          parseInt(this.props.number),
+          1000
+        );
         observer.unobserve(entry.target);
       }
     };
@@ -44,7 +49,7 @@ class SquareFact extends React.Component {
       var remaining = Math.max((endTime - now) / duration, 0);
       var value = Math.round(end - remaining * range);
       obj.innerHTML = value;
-      if (value == end) {
+      if (value === end) {
         clearInterval(timer);
       }
     }
@@ -54,12 +59,16 @@ class SquareFact extends React.Component {
   };
   render() {
     return (
-      <div className="square_fact" ref={this.squareRef}>
+      <div
+        className="square_fact"
+        ref={this.squareRef}
+        style={{ background: this.props.color }}
+      >
         <span className="square_fact_number" ref={this.numRef}>
           0
         </span>
-        <span className="square_fact_addition">registered</span>
-        <span className="square_fact_category">Users</span>
+        <span className="square_fact_addition">{this.props.addition}</span>
+        <span className="square_fact_category">{this.props.category}</span>
       </div>
     );
   }

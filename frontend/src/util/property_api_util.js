@@ -15,3 +15,11 @@ export const addAddress = propertyAddress => {
 export const fetchFilteredProperties = filter => {
   return axios.post("/api/properties/filter", filter);
 };
+
+export const fetchGeneral = () => {
+  return axios.get("/api/properties/general");
+};
+
+export const fetchNewestProperties = type => {
+  return axios.get(`/api/properties/newest/6/${type}`);
+};

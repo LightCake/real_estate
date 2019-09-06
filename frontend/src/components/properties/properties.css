@@ -6,9 +6,13 @@
   align-items: start;
 }
 
+.properties_spinner {
+  height: calc(100vh - var(--navbar_height));
+}
+
 .properties-left {
   border: 1px solid var(--grey);
-  padding: 1.5rem;
+  padding: 2rem;
 }
 
 .properties-left > * {

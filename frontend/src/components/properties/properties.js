@@ -56,7 +56,11 @@ class Properties extends React.Component {
 
   render() {
     if (this.props.filter.loading) {
-      return <Spinner />;
+      return (
+        <div className="properties_spinner">
+          <Spinner />
+        </div>
+      );
     }
     return (
       <div className="properties">

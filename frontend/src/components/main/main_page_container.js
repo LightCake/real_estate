@@ -1,30 +1,26 @@
 import { connect } from "react-redux";
-import { fetchFilteredProperties } from "../../actions/property_actions";
 import {
-  fetchValues,
-  toggleLoading,
-  receiveCurrentAndTotalPage,
-  update
-} from "../../actions/filter_actions";
+  fetchGeneralData,
+  fetchNewestProperites
+} from "../../actions/property_actions";
+import { fetchValues, update } from "../../actions/filter_actions";
 import MainPage from "./main_page";
 
 const mapStateToProps = state => {
   return {
-    properties: state.property.filtered,
+    properties: state.property.newest,
     filter: state.filter,
-    pagination: state.pagination
+    pagination: state.pagination,
+    general: state.general
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchFilteredProperties: filter =>
-      dispatch(fetchFilteredProperties(filter)),
     fetchValues: criteria => dispatch(fetchValues(criteria)),
-    receiveCurrentAndTotalPage: pages =>
-      dispatch(receiveCurrentAndTotalPage(pages)),
-    toggleLoading: () => dispatch(toggleLoading()),
-    update: field => data => dispatch(update(field)(data))
+    update: field => data => dispatch(update(field)(data)),
+    fetchGeneralData: () => dispatch(fetchGeneralData()),
+    fetchNewestProperties: type => dispatch(fetchNewestProperites(type))
   };
 };
 

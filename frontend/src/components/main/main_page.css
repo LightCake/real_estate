@@ -47,6 +47,14 @@
   cursor: pointer;
 }
 
+.main_page_data {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  height: 40vh;
+  justify-items: center;
+  align-items: center;
+}
+
 .main_page_about-us {
   display: grid;
   grid-template-columns: repeat(2, 1fr);

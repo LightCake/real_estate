@@ -2,7 +2,7 @@ import React from "react";
 import { Switch, Route } from "react-router-dom";
 import { AuthRoute, ProtectedRoute } from "../util/route_util";
 import NavBarContainer from "./nav/navbar_container";
-import MainPage from "./main/main_page";
+import MainPageContainer from "./main/main_page_container";
 import PropertiesContainer from "./properties/properties_container";
 import LoginFormContainer from "./session/login_form_container";
 import SignupFormContainer from "./session/signup_form_container";
@@ -14,7 +14,7 @@ const App = () => (
   <div className="app">
     <NavBarContainer />
     <Switch>
-      <Route exact path="/" component={MainPage} />
+      <Route exact path="/" component={MainPageContainer} />
       <Route exact path="/properties" component={PropertiesContainer} />
       <Route exact path="/saved" component={Spinner} />
       <AuthRoute exact path="/login" component={LoginFormContainer} />

@@ -1,19 +1,22 @@
 import React from "react";
 import Select from "react-select";
+import { Redirect } from "react-router-dom";
 import "./main_page.css";
 import CozyRoom from "../../assets/cozy-room.jpg";
 import PropertyCard from "../property_card/property_card";
+import SquareFact from "../square_fact/square_fact";
 
 class MainPage extends React.Component {
-  state = {
-    selectedType: "",
-    selectedCountry: "",
-    selectedBathrooms: "",
-    selectedBedrooms: ""
-  };
+  componentDidMount() {
+    const criteria = {
+      min_max: ["price", "size"],
+      distinct: ["type", "bedrooms", "bathrooms"]
+    };
+    this.props.fetchValues(criteria);
+  }
 
-  update = field => data => {
-    this.setState({ [field]: data });
+  handleFind = () => {
+    this.props.history.push("/properties");
   };
 
   render() {
@@ -30,19 +33,16 @@ class MainPage extends React.Component {
               name="Type"
               className="select_width"
               placeholder="Type"
-              value={this.state.selectedType}
-              onChange={this.update("selectedType")}
-              options={[
-                { value: "apartment", label: "Apartment" },
-                { value: "house", label: "House" }
-              ]}
+              value={this.props.filter.selectedType}
+              onChange={this.props.update("selectedType")}
+              options={this.props.filter.type}
             />
             <Select
               name="Country"
               className="select_width"
               placeholder="Country"
-              value={this.state.selectedCountry}
-              onChange={this.update("selectedCountry")}
+              value={"poo"}
+              onChange={() => console.log("Select Country")}
               options={[
                 { value: "australia", label: "Australia" },
                 { value: "germany", label: "Germany" },
@@ -55,30 +55,28 @@ class MainPage extends React.Component {
               name="Bathrooms"
               className="select_width"
               placeholder="Bathrooms"
-              value={this.state.selectedBathrooms}
-              onChange={this.update("selectedBathrooms")}
-              options={[
-                { value: "1", label: "1" },
-                { value: "2", label: "2" },
-                { value: "3", label: "3" },
-                { value: "4", label: "4" }
-              ]}
+              value={this.props.filter.selectedBathrooms}
+              onChange={this.props.update("selectedBathrooms")}
+              options={this.props.filter.bathrooms}
             />
             <Select
               name="Bedrooms"
               className="select_width"
               placeholder="Bedrooms"
-              value={this.state.selectedBedrooms}
-              onChange={this.update("selectedBedrooms")}
-              options={[
-                { value: "1", label: "1" },
-                { value: "2", label: "2" },
-                { value: "3", label: "3" },
-                { value: "4", label: "4" }
-              ]}
+              value={this.props.filter.selectedBedrooms}
+              onChange={this.props.update("selectedBedrooms")}
+              options={this.props.filter.bedrooms}
             />
           </div>
-          <button className="main_page_filter_button">Find Here</button>
+          <button className="main_page_filter_button" onClick={this.handleFind}>
+            Find Here
+          </button>
+        </div>
+        <div className="main_page_data">
+          <SquareFact />
+          <SquareFact />
+          <SquareFact />
+          <SquareFact />
         </div>
         <div className="main_page_about-us">
           <img src={CozyRoom} className="main_page_about-us_img" />
